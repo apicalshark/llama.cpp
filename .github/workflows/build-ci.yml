@@ -155,7 +155,7 @@ jobs:
 
         needs:
             - ubuntu-latest-cuda-cmake
-            - ubuntu-latest-vulkan-cmake
+            #- ubuntu-latest-vulkan-cmake
 
         steps:
             - name: Clone
