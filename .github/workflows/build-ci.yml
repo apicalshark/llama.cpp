@@ -132,14 +132,14 @@ jobs:
               run: |
                   cp LICENSE ./build/bin/
                   # cp $(find . -name "*.so") ./build/bin/ # Not needed anymore
-                  zip -r -j cudart-llama-${{ steps.tag.outputs.name }}-bin-ubuntu-x64.zip ./build/bin/*
+                  zip -r -j cudart-server-${{ steps.tag.outputs.name }}-rtx30-ubuntu-x64.zip ./build/bin/*
 
             - name: Upload artifacts
               if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || github.event.inputs.create_release == 'true' }}
               uses: actions/upload-artifact@v4
               with:
-                  path: cudart-llama-${{ steps.tag.outputs.name }}-bin-ubuntu-x64.zip
-                  name: cudart-llama-bin-ubuntu-x64.zip
+                  path: cudart-server-${{ steps.tag.outputs.name }}-rtx30-ubuntu-x64.zip
+                  name: cudart-server-rtx30-ubuntu-x64.zip
 
     # TODO: build with GGML_NO_METAL because test-backend-ops fail on "Apple Paravirtual device" and I don't know
     #       how to debug it.
