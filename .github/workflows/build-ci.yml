@@ -110,7 +110,7 @@ jobs:
                   export LD_LIBRARY_PATH=/usr/local/cuda-12.6/lib64 ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
                   mkdir build
                   cd build
-                  cmake .. -DLLAMA_FATAL_WARNINGS=OFF -DBUILD_SHARED_LIBS=ON -DGGML_CUDA=ON
+                  cmake .. -DLLAMA_FATAL_WARNINGS=OFF -DBUILD_SHARED_LIBS=ON -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES="86"
                   cmake --build . --config Release -j $(nproc)
 
             - name: Determine tag name
@@ -140,83 +140,6 @@ jobs:
               with:
                   path: cudart-llama-${{ steps.tag.outputs.name }}-bin-ubuntu-x64.zip
                   name: cudart-llama-bin-ubuntu-x64.zip
-    
-    # Vulkan Release
-
-    ubuntu-latest-vulkan-cmake:
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Free Disk Space (Ubuntu)
-              uses: jlumbroso/free-disk-space@main
-              with:
-                  # this might remove tools that are actually needed,
-                  # if set to "true" but frees about 6 GB
-                  tool-cache: true
-
-                  # all of these default to true, but feel free to set to
-                  # "false" if necessary for your workflow
-                  android: true
-                  dotnet: true
-                  haskell: true
-                  large-packages: true
-                  docker-images: true
-                  swap-storage: true
-
-            - name: Clone
-              id: checkout
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-
-            - name: Dependencies
-              id: depends
-              run: |
-                  wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
-                  sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-jammy.list https://packages.lunarg.com/vulkan/lunarg-vulkan-jammy.list
-                  sudo apt-get update
-                  sudo apt-get install build-essential libcurl4-openssl-dev vulkan-sdk ccache
-                  sudo apt install software-properties-common
-                  sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-                  sudo apt update
-                  sudo apt install gcc-13 g++-13
-                  sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 13 --slave /usr/bin/g++ g++ /usr/bin/g++-13
-
-            - name: Build
-              id: cmake_build
-              run: |
-                  mkdir build
-                  cd build
-                  cmake .. -DLLAMA_FATAL_WARNINGS=OFF -DBUILD_SHARED_LIBS=ON -DGGML_VULKAN=ON
-                  cmake --build . --config Release -j $(nproc)
-
-            - name: Determine tag name
-              id: tag
-              shell: bash
-              run: |
-                  BUILD_NUMBER="$(git rev-list --count HEAD)"
-                  SHORT_HASH="$(git rev-parse --short=7 HEAD)"
-                  if [[ "${{ env.BRANCH_NAME }}" == "master" ]]; then
-                    echo "name=b${BUILD_NUMBER}" >> $GITHUB_OUTPUT
-                  else
-                    SAFE_NAME=$(echo "${{ env.BRANCH_NAME }}" | tr '/' '-')
-                    echo "name=${SAFE_NAME}-b${BUILD_NUMBER}-${SHORT_HASH}" >> $GITHUB_OUTPUT
-                  fi
-
-            - name: Pack artifacts
-              id: pack_artifacts
-              if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || github.event.inputs.create_release == 'true' }}
-              run: |
-                  cp LICENSE ./build/bin/
-                  cp $(find . -name "*.so") ./build/bin/
-                  zip -r vulkan-llama-${{ steps.tag.outputs.name }}-bin-ubuntu-x64.zip ./build/bin/*
-
-            - name: Upload artifacts
-              if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || github.event.inputs.create_release == 'true' }}
-              uses: actions/upload-artifact@v4
-              with:
-                  path: vulkan-llama-${{ steps.tag.outputs.name }}-bin-ubuntu-x64.zip
-                  name: vulkan-llama-bin-ubuntu-x64.zip
 
     # TODO: build with GGML_NO_METAL because test-backend-ops fail on "Apple Paravirtual device" and I don't know
     #       how to debug it.
