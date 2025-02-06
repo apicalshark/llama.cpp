@@ -132,7 +132,7 @@ jobs:
               run: |
                   cp LICENSE ./build/bin/
                   # cp $(find . -name "*.so") ./build/bin/ # Not needed anymore
-                  zip -r cudart-llama-${{ steps.tag.outputs.name }}-bin-ubuntu-x64.zip ./build/bin/*
+                  zip -r -j cudart-llama-${{ steps.tag.outputs.name }}-bin-ubuntu-x64.zip ./build/bin/*
 
             - name: Upload artifacts
               if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || github.event.inputs.create_release == 'true' }}
