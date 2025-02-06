@@ -95,19 +95,19 @@ jobs:
               run: |                
                   wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
                   sudo dpkg -i cuda-keyring_1.1-1_all.deb
-                  sudo apt-get update
-                  sudo apt-get install build-essential libcurl4-openssl-dev ccache cuda nvidia-cuda-toolkit datacenter-gpu-manager cuda-drivers-fabricmanager
-                  sudo apt install software-properties-common
-                  sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-                  sudo apt update
-                  sudo apt install gcc-13 g++-13
-                  sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 13 --slave /usr/bin/g++ g++ /usr/bin/g++-13
+                  sudo apt-get update # Run apt-get update only once
+                  sudo apt-get install -y build-essential libcurl4-openssl-dev ccache cuda
+                  # sudo apt install software-properties-common
+                  # sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+                  # sudo apt update
+                  # sudo apt install gcc-13 g++-13
+                  # sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 13 --slave /usr/bin/g++ g++ /usr/bin/g++-13
 
             - name: Build
               id: cmake_build
               run: |
-                  export PATH=/usr/local/cuda-12.6/bin${PATH:+:${PATH}}
-                  export LD_LIBRARY_PATH=/usr/local/cuda-12.6/lib64 ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+                  export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
+                  export LD_LIBRARY_PATH=/usr/local/cuda/lib64 ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
                   mkdir build
                   cd build
                   cmake .. -DLLAMA_FATAL_WARNINGS=OFF -DBUILD_SHARED_LIBS=ON -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES="86"
