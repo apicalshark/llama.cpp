@@ -112,7 +112,7 @@ jobs:
                   cd build
                   cmake .. -DLLAMA_FATAL_WARNINGS=OFF -DBUILD_SHARED_LIBS=ON \
                       -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES="86" \
-                      -DCMAKE_C_FLAGS_RELEASE="-Ofast -DNDEBUG -flto" \
+                      -DCMAKE_C_FLAGS_RELEASE="-Ofast -DNDEBUG -flto -fno-finite-math-only" \
                       -DCMAKE_CXX_FLAGS_RELEASE="-Ofast -DNDEBUG -flto" \
                       -DCMAKE_CUDA_FLAGS_RELEASE="-O3 -DNDEBUG -Xcompiler=-Ofast,-flto"
                   cmake --build . --config Release -j $(nproc)
