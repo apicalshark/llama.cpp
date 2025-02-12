@@ -114,8 +114,7 @@ jobs:
                       -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES="86" \
                       -DCMAKE_C_FLAGS_RELEASE="-Ofast -DNDEBUG -march=znver3" \
                       -DCMAKE_CXX_FLAGS_RELEASE="-Ofast -DNDEBUG -march=znver3" \
-                      -DCMAKE_CUDA_FLAGS_RELEASE="-O3 -DNDEBUG -Xcompiler=-Ofast,-march=znver3" \
-                      -DCMAKE_STRIP="strip" -DCMAKE_STRIP_FLAGS="-s"
+                      -DCMAKE_CUDA_FLAGS_RELEASE="-O3 -DNDEBUG -Xcompiler=-Ofast,-march=znver3"
                   cmake --build . --config Release -j $(nproc) --strip
 
             - name: Determine tag name
