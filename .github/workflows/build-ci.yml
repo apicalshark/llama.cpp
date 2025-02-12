@@ -112,11 +112,11 @@ jobs:
                   cd build
                   cmake .. -DLLAMA_FATAL_WARNINGS=OFF -DBUILD_SHARED_LIBS=ON \
                       -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES="86" \
-                      -DCMAKE_C_FLAGS_RELEASE="-Ofast -DNDEBUG -flto -fno-finite-math-only -march=znver3" \
-                      -DCMAKE_CXX_FLAGS_RELEASE="-Ofast -DNDEBUG -flto -march=znver3" \
+                      -DCMAKE_C_FLAGS_RELEASE="-Ofast -DNDEBUG -march=znver3" \
+                      -DCMAKE_CXX_FLAGS_RELEASE="-Ofast -DNDEBUG -march=znver3" \
                       -DCMAKE_CUDA_FLAGS_RELEASE="-O3 -DNDEBUG -Xcompiler=-Ofast,-march=znver3" \
-                      -DCMAKE_LINK_FLAGS_RELEASE="-flto -threads"  # Add linker flags for parallel LTO
-                  cmake --build . --config Release -j $(nproc)
+                      -DCMAKE_STRIP="strip" -DCMAKE_STRIP_FLAGS="-s"
+                  cmake --build . --config Release -j $(nproc) --strip
 
             - name: Determine tag name
               id: tag
