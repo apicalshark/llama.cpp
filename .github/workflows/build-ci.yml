@@ -115,7 +115,7 @@ jobs:
                       -DCMAKE_C_FLAGS_RELEASE="-Ofast -DNDEBUG -march=znver3" \
                       -DCMAKE_CXX_FLAGS_RELEASE="-Ofast -DNDEBUG -march=znver3" \
                       -DCMAKE_CUDA_FLAGS_RELEASE="-O3 -DNDEBUG -Xcompiler=-Ofast,-march=znver3"
-                  cmake --build . --config Release -j $(nproc) --strip
+                  cmake --build . --config Release -j $(nproc)
 
             - name: Determine tag name
               id: tag
