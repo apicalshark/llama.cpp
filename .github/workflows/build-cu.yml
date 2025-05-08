@@ -114,7 +114,7 @@ jobs:
                       -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=86 \
                       -DCMAKE_EXE_LINKER_FLAGS=-Wl,--allow-shlib-undefined \
                       -DCMAKE_C_FLAGS_RELEASE="-Ofast -DNDEBUG -fno-finite-math-only -fmath-errno -march=native" \
-                      -DCMAKE_CXX_FLAGS_RELEASE="-Ofast -DNDEBUG -march=native" \
+                      -DCMAKE_CXX_FLAGS_RELEASE="-O3 -DNDEBUG -march=native" \
                       -DCMAKE_CUDA_FLAGS_RELEASE="-O3 -ffast-math -DNDEBUG -Xcompiler=-Ofast,-march=native"
                   cmake --build . --config Release -j $(nproc)
 
